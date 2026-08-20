@@ -7,17 +7,21 @@
 
 This repository contains a Flutter application developed for Advanced Mobile
 Programming. The project follows a feature-aligned clean architecture pattern
-that keeps responsibilities separated and easy to extend:
+that keeps responsibilities separated, testable, and easy to extend:
 
-- `models/` contains typed data objects such as products and carts.
-- `providers/` contains app-wide state, including `ThemeModel`.
-- `screens/` contains the application views and user workflows.
-- `services/` contains API and data-access logic for DummyJSON.
+- `models/` contains typed JSON data objects such as products, carts, and users.
+- `providers/` contains reactive app-wide state, including `ThemeModel` and
+   the interactive cart model.
+- `screens/` contains the catalog, product detail, cart, authentication,
+   profile, splash, and settings views.
+- `services/` contains DummyJSON API clients and local user-session storage.
 - `widgets/` contains reusable presentation components.
 
-Provider is used for reactive application state management. Product and cart
-data are integrated with the DummyJSON API, while the presentation layer
-provides search, product details, theme settings, and cart workflows.
+Provider is used for reactive application state management. Product, cart, and
+authentication data are integrated with DummyJSON, while
+`shared_preferences` stores the authenticated user locally. The presentation
+layer provides search, product details, theme settings, authentication,
+profile, and cart workflows.
 
 ## Chronological Lab Activities
 
@@ -32,19 +36,19 @@ application-wide state:
   application. The provider stores the light/dark mode selection and notifies
   listening widgets when the selection changes.
 
-This established the state-management foundation used by the later settings
-and theme features.
+This established the state-management foundation used by the later settings,
+authentication, and cart features.
 
 ### Lab Activity 2: Product API Integration
 
 The second activity connected the product catalog to DummyJSON using the
-`http` package. The application maps API data into product models and presents
-it through reusable screens and widgets. The activity enhancements were:
+`http` package. API responses are mapped into product models and presented
+through reusable screens and widgets. The activity enhancements were:
 
 1. **Enhancement 1:** a dynamic search bar is displayed above the product list
-   and filters products as the user types.
+   and filters products as the user types without requiring a new API request.
 2. **Enhancement 2:** selecting a product card opens a detail page containing
-   the product information and price.
+   the product image, description, and price.
 3. **Enhancement 3:** a settings page provides light and dark theme toggling.
    The activity uses `flutter_dotenv` for environment configuration and `http`
    for network requests.
@@ -61,13 +65,15 @@ The cart and navigation enhancements were:
 
 1. **Enhancement 1:** `cart_screen.dart` renders cart data from the DummyJSON
    cart endpoints, including product thumbnails, quantities, prices, totals,
-   and a Confirm Order action.
+   and a Confirm Order action. The interactive cart also records products
+   actually added by the user and supports live quantity changes.
 2. **Enhancement 2:** navigation connects the catalog, cart, and theme
-   settings through the bottom navigation bar and its floating-style action
-   behavior.
+   settings through the bottom navigation bar, including Aquarium, Cart,
+   Theme, and Profile destinations.
 3. **Enhancement 3:** carts can be filtered for a specific user through
    `/carts/user/{id}`, and each cart item is clickable and routes to the
-   corresponding product detail screen.
+   corresponding product detail screen. Cart quantities are maintained by
+   Provider after the initial API data is loaded.
 
 The catalog content is aligned with the theme through fish-focused products
 such as Royal Blue Betta, Neon Tetra School, Fancy Guppy Pair, and Cherry
@@ -75,31 +81,29 @@ Shrimp Colony.
 
 ### Lab Activity 4: Authentication and User Profiles
 
-Lab Activity 4 (API Part III) adds authentication and user-specific data
-management using DummyJSON and `shared_preferences`:
+Lab Activity 4 (API Part III) adds authentication, persistent sessions,
+profile management, and user-specific data using DummyJSON and
+`shared_preferences`:
 
-- `models/user.dart` provides null-safe JSON serialization for user identity,
-   profile, and authentication token fields.
-- `services/user_service.dart` authenticates with `POST /auth/login`, saves the
-   signed-in user locally, restores the session, checks login status, and logs
-   the user out.
-- `splash_screen.dart` waits 1.5 seconds and routes users to Home or Sign In
-   based on the saved session.
-- `signin_screen.dart` provides username/password inputs and displays login
-   errors from the API.
-- `profile_screen.dart` displays the user's avatar, name, email, ID, gender,
-   and provides a functional Log Out action.
-- `cart_screen.dart` resolves the saved user's ID and requests
-   `/carts/user/{id}` for the user's initial cart. After loading, Provider keeps
-   the interactive cart quantities and locally added products in sync.
-
-## Lab 4 Branch Commands
-
-From the repository root, create and publish the Lab 4 branch:
-
-```powershell
-git switch -c lab_act4
-git add .
-git commit -m "lab_act4"
-git push -u origin lab_act4
-```
+- **User model:** `models/user.dart` provides null-safe `fromJson` and `toJson`
+   support for `id`, `username`, `email`, `firstName`, `lastName`, `gender`,
+   `image`, `accessToken`, and `refreshToken`.
+- **Authentication service:** `services/user_service.dart` sends credentials
+   to `POST /auth/login`, handles API errors, and saves the authenticated user.
+   It also provides `saveUserData`, `getUserData`, `getUser`, `isLoggedIn`, and
+   `logout` methods.
+- **Persistent storage:** the serialized user is stored in
+   `SharedPreferences`, allowing the session to survive application restarts.
+- **Splash screen:** `splash_screen.dart` provides a custom aquatic startup
+   screen, waits 1.5 seconds, checks `isLoggedIn`, and routes to `/home` or
+   `/signin`.
+- **Sign-in screen:** `signin_screen.dart` provides validated username and
+   password inputs, a loading state, API authentication, and readable login
+   errors.
+- **Profile screen:** `profile_screen.dart` renders the saved user's avatar,
+   full name, email, user ID, username, and gender. Its Log Out action clears
+   the persisted session and returns to sign-in.
+- **User-specific cart binding:** `cart_screen.dart` reads the saved user's
+   ID and requests `/carts/user/{id}` for the initial cart contents. Provider
+   then preserves the user's real additions, quantity changes, removals, and
+   current total during the active session.
