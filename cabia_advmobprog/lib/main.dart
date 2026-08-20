@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'settings.dart';
+import 'package:cabia_mobile/constants.dart';
+import 'package:cabia_mobile/providers/theme_provider.dart';
+import 'package:cabia_mobile/screens/home_screen.dart';
+import 'package:cabia_mobile/screens/settings_screens.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeModel(),
-      child: const MyApp(),
-    ),
+    ChangeNotifierProvider(create: (_) => ThemeModel(), child: const MyApp()),
   );
 }
 
-/// Root widget of the application.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -20,105 +19,36 @@ class MyApp extends StatelessWidget {
     final themeModel = context.watch<ThemeModel>();
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: AppConstants.appTitle,
       debugShowCheckedModeBanner: false,
-
-      // Light theme of the application.
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-        ),
+        colorScheme:
+            ColorScheme.fromSeed(
+              seedColor: const Color(0xFF3155D9),
+              brightness: Brightness.light,
+            ).copyWith(
+              secondary: const Color(0xFFD94343),
+              tertiary: const Color(0xFFE87832),
+              surface: const Color(0xFFF2FBFC),
+            ),
+        scaffoldBackgroundColor: const Color(0xFFEAF7F8),
       ),
-
-      // Dark theme of the application.
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
-      ),
-
-      // Selects the app-wide theme managed by Provider.
-      themeMode:
-          themeModel.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-
-      home: const MyHomePage(
-        title: 'Flutter Demo Home Page',
-      ),
-    );
-  }
-}
-
-/// Counter screen that demonstrates ephemeral state.
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    super.key,
-    required this.title,
-  });
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-/// Stores and manages the local counter state.
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  /// Increases the counter using setState.
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  /// Opens the separate theme settings screen.
-  void _openSettings() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SettingsPage(),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor:
-            Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-
-        // Opens the second screen required by the activity.
-        actions: [
-          IconButton(
-            onPressed: _openSettings,
-            tooltip: 'Theme Settings',
-            icon: const Icon(Icons.settings),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'You have pushed the button this many times:',
+        colorScheme:
+            ColorScheme.fromSeed(
+              seedColor: const Color(0xFF456BFF),
+              brightness: Brightness.dark,
+            ).copyWith(
+              secondary: const Color(0xFFF05A54),
+              tertiary: const Color(0xFFFF8A3D),
+              surface: const Color(0xFF132B35),
+              surfaceContainer: const Color(0xFF193943),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+        scaffoldBackgroundColor: const Color(0xFF0B1E27),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      themeMode: themeModel.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      home: const HomeScreen(),
+      routes: {'/settings': (context) => const SettingsPage()},
     );
   }
 }
