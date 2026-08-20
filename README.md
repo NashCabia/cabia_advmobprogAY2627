@@ -72,3 +72,34 @@ The cart and navigation enhancements were:
 The catalog content is aligned with the theme through fish-focused products
 such as Royal Blue Betta, Neon Tetra School, Fancy Guppy Pair, and Cherry
 Shrimp Colony.
+
+### Lab Activity 4: Authentication and User Profiles
+
+Lab Activity 4 (API Part III) adds authentication and user-specific data
+management using DummyJSON and `shared_preferences`:
+
+- `models/user.dart` provides null-safe JSON serialization for user identity,
+   profile, and authentication token fields.
+- `services/user_service.dart` authenticates with `POST /auth/login`, saves the
+   signed-in user locally, restores the session, checks login status, and logs
+   the user out.
+- `splash_screen.dart` waits 1.5 seconds and routes users to Home or Sign In
+   based on the saved session.
+- `signin_screen.dart` provides username/password inputs and displays login
+   errors from the API.
+- `profile_screen.dart` displays the user's avatar, name, email, ID, gender,
+   and provides a functional Log Out action.
+- `cart_screen.dart` resolves the saved user's ID and requests
+   `/carts/user/{id}` for the user's initial cart. After loading, Provider keeps
+   the interactive cart quantities and locally added products in sync.
+
+## Lab 4 Branch Commands
+
+From the repository root, create and publish the Lab 4 branch:
+
+```powershell
+git switch -c lab_act4
+git add .
+git commit -m "lab_act4"
+git push -u origin lab_act4
+```

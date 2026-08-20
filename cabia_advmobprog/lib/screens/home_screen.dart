@@ -49,6 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } else if (index == 2) {
       await Navigator.pushNamed(context, '/settings');
+    } else if (index == 3) {
+      await Navigator.pushNamed(context, '/profile');
     }
 
     if (mounted) {
@@ -181,6 +183,11 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.tune_outlined),
             selectedIcon: Icon(Icons.tune),
             label: 'Theme',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ],
       ),

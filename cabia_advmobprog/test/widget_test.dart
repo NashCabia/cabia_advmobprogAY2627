@@ -1,22 +1,27 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:cabia_mobile/main.dart';
+import 'package:cabia_mobile/providers/cart_provider.dart';
 import 'package:cabia_mobile/providers/theme_provider.dart';
 
 void main() {
-  testWidgets('shows the product catalog and settings entry', (
+  testWidgets('shows the authentication splash screen', (
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      ChangeNotifierProvider(create: (_) => ThemeModel(), child: const MyApp()),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeModel()),
+          ChangeNotifierProvider(create: (_) => CartModel()),
+        ],
+        child: const MyApp(),
+      ),
     );
 
-    await tester.pumpAndSettle();
-
     expect(find.text('Aquaria Store'), findsOneWidget);
-    expect(find.text('Search products'), findsOneWidget);
-    expect(find.text('Aquarium'), findsOneWidget);
-    expect(find.text('Cart'), findsOneWidget);
-    expect(find.text('Theme'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 1500));
   });
 }

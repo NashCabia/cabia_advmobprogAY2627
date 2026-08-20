@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:cabia_mobile/models/product.dart';
+import 'package:cabia_mobile/providers/cart_provider.dart';
 import 'package:cabia_mobile/widgets/custom_text.dart';
 
 // Enhancement 2: detailed screen shown when a product card is selected.
@@ -51,6 +53,20 @@ class ProductDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             CustomText(text: product.description, fontSize: 16),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () {
+                  context.read<CartModel>().addProduct(product);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${product.title} added to cart')),
+                  );
+                },
+                icon: const Icon(Icons.add_shopping_cart),
+                label: const Text('Add to Cart'),
+              ),
+            ),
           ],
         ),
       ),
