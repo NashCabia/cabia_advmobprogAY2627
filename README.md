@@ -72,29 +72,3 @@ The cart and navigation enhancements were:
 The catalog content is aligned with the theme through fish-focused products
 such as Royal Blue Betta, Neon Tetra School, Fancy Guppy Pair, and Cherry
 Shrimp Colony.
-
-## Git Branch Commands
-
-Run the following commands from the repository root:
-
-```powershell
-cd C:\Users\milag\Desktop\cabia_advmobprogAY2627
-
-# Create the Lab 2 branch from the current lab-act1 branch.
-git switch -c lab_act2
-git add .
-git commit -m "lab_act2"
-git push -u origin lab_act2
-
-# Create the Lab 3 branch from the committed Lab 2 state.
-git switch -c lab_act3
-git add .
-git commit --allow-empty -m "lab_act3"
-git push -u origin lab_act3
-```
-
-Because all current files are committed in the `lab_act2` step, there may be
-no remaining changes for the Lab 3 commit. The `--allow-empty` flag makes the
-requested `lab_act3` commit succeed while preserving the exact sequential
-workflow. If additional Lab 3 edits are made after creating `lab_act3`, use
-`git add .` and `git commit -m "lab_act3"` instead.
