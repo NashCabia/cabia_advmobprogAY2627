@@ -29,7 +29,7 @@ class CartService {
         .map((cart) => Cart.fromJson(Map<String, dynamic>.from(cart)))
         .toList();
 
-    // Keep DummyJSON quantities while using the app's aquatic catalog details.
+    // Keep DummyJSON quantities while using the app's catalog details.
     final catalog = await ProductService.fetchProducts();
     final productsById = {for (final product in catalog) product.id: product};
 

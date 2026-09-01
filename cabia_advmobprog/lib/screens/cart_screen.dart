@@ -43,7 +43,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Your Aquarium Cart')),
+      appBar: AppBar(title: const Text('Your Cart')),
       body: FutureBuilder<void>(
         future: _initialCart,
         builder: (context, snapshot) {
@@ -176,7 +176,7 @@ class _CartProductTile extends StatelessWidget {
                 product: Product(
                   id: product.id,
                   title: product.title,
-                  description: 'Aquarium product from your cart.',
+                  description: 'Product from your cart.',
                   imageUrl: product.thumbnail,
                   price: product.discountedPrice,
                 ),

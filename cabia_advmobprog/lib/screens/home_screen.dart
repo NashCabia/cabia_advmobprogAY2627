@@ -14,27 +14,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Product>> _productsFuture;
   String _query = '';
   int _selectedDestination = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _productsFuture = ProductService.fetchProducts();
-  }
-
-  List<Product> _filterProducts(List<Product> products) {
-    final query = _query.trim().toLowerCase();
+  Future<List<Product>> _getProducts() {
+    final query = _query.trim();
     if (query.isEmpty) {
-      return products;
+      return ProductService.fetchProducts();
     }
-
-    return products.where((product) {
-      final titleMatch = product.title.toLowerCase().contains(query);
-      final descMatch = product.description.toLowerCase().contains(query);
-      return titleMatch || descMatch;
-    }).toList();
+    return ProductService.searchProducts(query);
   }
 
   Future<void> _selectDestination(int index) async {
@@ -71,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: FutureBuilder<List<Product>>(
-        future: _productsFuture,
+        future: _getProducts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -81,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return Center(child: CustomText(text: 'Failed to load products'));
           }
 
-          final products = _filterProducts(snapshot.data ?? const []);
+          final products = snapshot.data ?? const [];
 
           return Column(
             children: [
@@ -170,9 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
         onDestinationSelected: _selectDestination,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.water_drop_outlined),
-            selectedIcon: Icon(Icons.water_drop),
-            label: 'Aquarium',
+            icon: Icon(Icons.shopping_bag_outlined),
+            selectedIcon: Icon(Icons.shopping_bag),
+            label: 'Catalog',
           ),
           NavigationDestination(
             icon: Icon(Icons.shopping_cart_outlined),

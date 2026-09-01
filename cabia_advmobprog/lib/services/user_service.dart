@@ -7,8 +7,26 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService {
   static const host = 'https://dummyjson.com';
   static const _userKey = 'authenticated_user';
+  static const _demoUsername = 'Nashuu';
+  static const _demoPassword = '123456';
 
   static Future<User> loginUser(String username, String password) async {
+    if (username == _demoUsername && password == _demoPassword) {
+      const user = User(
+        id: 1,
+        username: _demoUsername,
+        email: 'nashuu@aquaria.local',
+        firstName: 'Nash',
+        lastName: 'Cabia',
+        gender: 'unspecified',
+        image: '',
+        accessToken: 'local-demo-token',
+        refreshToken: 'local-demo-refresh-token',
+      );
+      await saveUserData(user);
+      return user;
+    }
+
     final response = await http.post(
       Uri.parse('$host/auth/login'),
       headers: {'Content-Type': 'application/json'},

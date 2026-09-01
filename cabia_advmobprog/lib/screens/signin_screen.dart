@@ -10,8 +10,8 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController(text: 'emilys');
-  final _passwordController = TextEditingController(text: 'emilyspass');
+  final _usernameController = TextEditingController(text: 'Nashuu');
+  final _passwordController = TextEditingController(text: '123456');
   bool _loading = false;
   String? _error;
 
@@ -71,8 +71,14 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'Sign in to manage your aquarium cart.',
+                  'Sign in to manage your cart.',
                   textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Demo account: Nashuu / 123456',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 28),
                 TextFormField(

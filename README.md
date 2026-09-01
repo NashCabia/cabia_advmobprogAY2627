@@ -53,7 +53,7 @@ through reusable screens and widgets. The activity enhancements were:
    The activity uses `flutter_dotenv` for environment configuration and `http`
    for network requests.
 
-### Lab Activity 3: Cart Management and Aquatic Theme
+### Lab Activity 3: Cart Management 
 
 The third activity expanded the catalog into a cart workflow and applied a
 custom visual identity inspired by Betta fish and Neocaridina shrimps. The
@@ -68,7 +68,7 @@ The cart and navigation enhancements were:
    and a Confirm Order action. The interactive cart also records products
    actually added by the user and supports live quantity changes.
 2. **Enhancement 2:** navigation connects the catalog, cart, and theme
-   settings through the bottom navigation bar, including Aquarium, Cart,
+   settings through the bottom navigation bar, including Catalog, Cart,
    Theme, and Profile destinations.
 3. **Enhancement 3:** carts can be filtered for a specific user through
    `/carts/user/{id}`, and each cart item is clickable and routes to the
@@ -94,7 +94,7 @@ profile management, and user-specific data using DummyJSON and
    `logout` methods.
 - **Persistent storage:** the serialized user is stored in
    `SharedPreferences`, allowing the session to survive application restarts.
-- **Splash screen:** `splash_screen.dart` provides a custom aquatic startup
+- **Splash screen:** `splash_screen.dart` provides a custom startup
    screen, waits 1.5 seconds, checks `isLoggedIn`, and routes to `/home` or
    `/signin`.
 - **Sign-in screen:** `signin_screen.dart` provides validated username and
