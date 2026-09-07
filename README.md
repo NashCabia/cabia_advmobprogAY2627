@@ -5,9 +5,10 @@
 
 ## Project Overview
 
-This repository contains a Flutter application developed for Advanced Mobile
-Programming. The project follows a feature-aligned clean architecture pattern
-that keeps responsibilities separated, testable, and easy to extend:
+This repository contains the Flutter application I developed for Advanced
+Mobile Programming. I organized the project using a feature-aligned clean
+architecture pattern so the responsibilities stay separated and easier to
+maintain:
 
 - `models/` contains typed JSON data objects such as products, carts, and users.
 - `providers/` contains reactive app-wide state, including `ThemeModel` and
@@ -17,93 +18,95 @@ that keeps responsibilities separated, testable, and easy to extend:
 - `services/` contains DummyJSON API clients and local user-session storage.
 - `widgets/` contains reusable presentation components.
 
-Provider is used for reactive application state management. Product, cart, and
-authentication data are integrated with DummyJSON, while
+I use Provider for reactive application state management. The product, cart,
+and authentication data are connected to DummyJSON, while
 `shared_preferences` stores the authenticated user locally. The presentation
-layer provides search, product details, theme settings, authentication,
+layer contains the search, product details, theme settings, authentication,
 profile, and cart workflows.
 
-## Chronological Lab Activities
+## Progressive Lab Discussions and Reflections
 
 ### Lab Activity 1: Flutter State Management
 
-The first activity introduced the difference between ephemeral state and
-application-wide state:
+In Lab Activity 1, I learned the difference between ephemeral state and
+application-wide state. I used `setState` for a local counter, where the state
+belongs only to the widget that owns it. I also used `ChangeNotifier` and
+Provider for the theme setting so different parts of the application could
+respond when the light or dark mode changed.
 
-- **Ephemeral state:** a local counter is updated with Flutter's `setState`.
-  This state belongs only to the widget that owns it.
-- **App-wide state:** `ChangeNotifier` and Provider expose `ThemeModel` to the
-  application. The provider stores the light/dark mode selection and notifies
-  listening widgets when the selection changes.
-
-This established the state-management foundation used by the later settings,
-authentication, and cart features.
+This activity helped me understand that state management depends on how widely
+the data needs to be used. It became the foundation for the settings,
+authentication, and cart features that I added later.
 
 ### Lab Activity 2: Product API Integration
 
-The second activity connected the product catalog to DummyJSON using the
-`http` package. API responses are mapped into product models and presented
-through reusable screens and widgets. The activity enhancements were:
+For Lab Activity 2, I started organizing the project using a clean
+architecture structure with `models`, `providers`, `screens`, `services`, and
+`widgets`. Separating these responsibilities made the code easier for me to
+understand because the data, state, API logic, and interface were no longer
+kept in one place.
 
-1. **Enhancement 1:** a dynamic search bar is displayed above the product list
-   and filters products as the user types without requiring a new API request.
-2. **Enhancement 2:** selecting a product card opens a detail page containing
-   the product image, description, and price.
-3. **Enhancement 3:** a settings page provides light and dark theme toggling.
-   The activity uses `flutter_dotenv` for environment configuration and `http`
-   for network requests.
+I connected the product catalog to DummyJSON using the `http` package. I
+learned how to receive product data from the API, map it into models, and show
+it through reusable screens and widgets. I added a search filter so I could
+find products while typing, and I added detail view navigation so selecting a
+product opened its image, description, and price.
 
-### Lab Activity 3: Cart Management 
+I also added a settings page for switching between light and dark themes. Lab
+Activity 2 showed me how the state-management ideas from the first activity
+could support a real API-based application.
 
-The third activity expanded the catalog into a cart workflow and applied a
-custom visual identity inspired by Betta fish and Neocaridina shrimps. The
-light theme uses clean water-clear tones, while the dark theme uses deep
-abyss/slate tones. Royal blue represents Betta fish, and cherry-red and orange
-accents represent Neocaridina shrimp.
+### Lab Activity 3: Cart Management
 
-The cart and navigation enhancements were:
+In Lab Activity 3, I extended the product catalog into a complete cart
+workflow. The main challenge for me was working with the nested JSON returned
+by the cart API. A cart contains cart information and a list of products, so I
+had to parse the product objects inside the cart instead of treating the
+response as a simple flat list. This gave me more practice creating models that
+match the actual structure of API data.
 
-1. **Enhancement 1:** `cart_screen.dart` renders cart data from the DummyJSON
-   cart endpoints, including product thumbnails, quantities, prices, totals,
-   and a Confirm Order action. The interactive cart also records products
-   actually added by the user and supports live quantity changes.
-2. **Enhancement 2:** navigation connects the catalog, cart, and theme
-   settings through the bottom navigation bar, including Catalog, Cart,
-   Theme, and Profile destinations.
-3. **Enhancement 3:** carts can be filtered for a specific user through
-   `/carts/user/{id}`, and each cart item is clickable and routes to the
-   corresponding product detail screen. Cart quantities are maintained by
-   Provider after the initial API data is loaded.
+I added cart items with product thumbnails, quantities, prices, and totals. I
+also made it possible to update quantities and keep track of products added by
+the user. The bottom navigation connects the shop, cart, theme, and profile
+areas, so the user can move between the main parts of the application without
+losing the current cart state.
 
-The catalog content is aligned with the theme through fish-focused products
-such as Royal Blue Betta, Neon Tetra School, Fancy Guppy Pair, and Cherry
-Shrimp Colony.
+Another important part of this activity was keeping navigation smooth between
+the cart list and the product detail screen. Each cart item can be selected to
+open the matching product details, and the user can return to the cart without
+confusing the selected product or the cart contents. This activity helped me
+understand how API data, Provider state, and navigation need to work together
+in one user workflow.
 
 ### Lab Activity 4: Authentication and User Profiles
 
-Lab Activity 4 (API Part III) adds authentication, persistent sessions,
-profile management, and user-specific data using DummyJSON and
-`shared_preferences`:
+For Lab Activity 4, I built on the catalog and cart features by adding
+authentication and user-specific information. I created `UserService` to send
+the login request and handle the response from the authentication API. The
+service also manages saving and retrieving the logged-in user's details, which
+helped me keep authentication logic outside of the sign-in screen.
 
-- **User model:** `models/user.dart` provides null-safe `fromJson` and `toJson`
-   support for `id`, `username`, `email`, `firstName`, `lastName`, `gender`,
-   `image`, `accessToken`, and `refreshToken`.
-- **Authentication service:** `services/user_service.dart` sends credentials
-   to `POST /auth/login`, handles API errors, and saves the authenticated user.
-   It also provides `saveUserData`, `getUserData`, `getUser`, `isLoggedIn`, and
-   `logout` methods.
-- **Persistent storage:** the serialized user is stored in
-   `SharedPreferences`, allowing the session to survive application restarts.
-- **Splash screen:** `splash_screen.dart` provides a custom startup
-   screen, waits 1.5 seconds, checks `isLoggedIn`, and routes to `/home` or
-   `/signin`.
-- **Sign-in screen:** `signin_screen.dart` provides validated username and
-   password inputs, a loading state, API authentication, and readable login
-   errors.
-- **Profile screen:** `profile_screen.dart` renders the saved user's avatar,
-   full name, email, user ID, username, and gender. Its Log Out action clears
-   the persisted session and returns to sign-in.
-- **User-specific cart binding:** `cart_screen.dart` reads the saved user's
-   ID and requests `/carts/user/{id}` for the initial cart contents. Provider
-   then preserves the user's real additions, quantity changes, removals, and
-   current total during the active session.
+I used `SharedPreferences` to save the user's tokens and profile details
+locally. Because of this, the application can remember the session when it is
+opened again instead of requiring the user to log in every time. I also set up
+a persistent `SplashScreen` check that runs when the application starts. It
+checks whether user data is already saved and then sends the user either to the
+home screen or to the sign-in screen.
+
+The stored user ID is also used to load the correct cart dynamically from the
+user-specific cart endpoint. This means the cart is connected to the account
+that is currently signed in rather than using one fixed user. The profile view
+uses the same saved user information to show details such as the user's name,
+email, username, gender, and profile image. Adding these features made the
+application feel more complete because the data is now connected to an actual
+user session.
+
+Looking back at the four activities, I can see the project progressing in
+stages. Lab Activity 2 taught me how to organize the code and use product API
+data. Lab Activity 3 used that foundation to create a connected cart workflow.
+Lab Activity 4 then added authentication and personalized data. Each activity
+made the previous features more useful and gave me a better understanding of
+how a Flutter application is built step by step.
+
+The catalog uses consumer products such as Wireless Headphones, Classic
+Backpack, Smart Watch, and Running Shoes.
