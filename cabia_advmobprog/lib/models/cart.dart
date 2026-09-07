@@ -44,6 +44,26 @@ class CartProduct {
     'thumbnail': thumbnail,
   };
 
+  CartProduct copyWith({
+    String? title,
+    double? price,
+    int? quantity,
+    double? total,
+    double? discountedPrice,
+    String? thumbnail,
+  }) {
+    return CartProduct(
+      id: id,
+      title: title ?? this.title,
+      price: price ?? this.price,
+      quantity: quantity ?? this.quantity,
+      total: total ?? this.total,
+      discountPercentage: discountPercentage,
+      discountedPrice: discountedPrice ?? this.discountedPrice,
+      thumbnail: thumbnail ?? this.thumbnail,
+    );
+  }
+
   static int _asInt(Object? value) => value is num ? value.toInt() : 0;
 
   static double _asDouble(Object? value) =>

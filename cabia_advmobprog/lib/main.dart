@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cabia_mobile/constants.dart';
+import 'package:cabia_mobile/providers/cart_provider.dart';
 import 'package:cabia_mobile/providers/theme_provider.dart';
 import 'package:cabia_mobile/screens/home_screen.dart';
+import 'package:cabia_mobile/screens/profile_screen.dart';
 import 'package:cabia_mobile/screens/settings_screens.dart';
+import 'package:cabia_mobile/screens/signin_screen.dart';
+import 'package:cabia_mobile/screens/splash_screen.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(create: (_) => ThemeModel(), child: const MyApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeModel()),
+        ChangeNotifierProvider(create: (_) => CartModel()),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -47,8 +57,13 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF0B1E27),
       ),
       themeMode: themeModel.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: const HomeScreen(),
-      routes: {'/settings': (context) => const SettingsPage()},
+      home: const SplashScreen(),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/signin': (context) => const SignInScreen(),
+        '/profile': (context) => const ProfileScreen(),
+        '/settings': (context) => const SettingsPage(),
+      },
     );
   }
 }
