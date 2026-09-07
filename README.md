@@ -5,70 +5,75 @@
 
 ## Project Overview
 
-This repository contains a Flutter application developed for Advanced Mobile
-Programming. The project follows a feature-aligned clean architecture pattern
-that keeps responsibilities separated and easy to extend:
+This repository contains the Flutter application I developed for Advanced
+Mobile Programming. I organized the project using a feature-aligned clean
+architecture pattern so the responsibilities stay separated and easier to
+maintain:
 
-- `models/` contains typed data objects such as products and carts.
-- `providers/` contains app-wide state, including `ThemeModel`.
-- `screens/` contains the application views and user workflows.
-- `services/` contains API and data-access logic for DummyJSON.
+- `models/` contains typed JSON data objects such as products and carts.
+- `providers/` contains reactive app-wide state, including `ThemeModel` and
+   the interactive cart model.
+- `screens/` contains the catalog, product detail, cart, and settings views.
+- `services/` contains the DummyJSON API clients.
 - `widgets/` contains reusable presentation components.
 
-Provider is used for reactive application state management. Product and cart
-data are integrated with the DummyJSON API, while the presentation layer
-provides search, product details, theme settings, and cart workflows.
+I use Provider for reactive application state management. The product and cart
+data are connected to DummyJSON, while the presentation layer contains the
+search, product details, theme settings, and cart workflows completed so far.
 
-## Chronological Lab Activities
+## Progressive Lab Discussions and Reflections
 
 ### Lab Activity 1: Flutter State Management
 
-The first activity introduced the difference between ephemeral state and
-application-wide state:
+In Lab Activity 1, I learned the difference between ephemeral state and
+application-wide state. I used `setState` for a local counter, where the state
+belongs only to the widget that owns it. I also used `ChangeNotifier` and
+Provider for the theme setting so different parts of the application could
+respond when the light or dark mode changed.
 
-- **Ephemeral state:** a local counter is updated with Flutter's `setState`.
-  This state belongs only to the widget that owns it.
-- **App-wide state:** `ChangeNotifier` and Provider expose `ThemeModel` to the
-  application. The provider stores the light/dark mode selection and notifies
-  listening widgets when the selection changes.
-
-This established the state-management foundation used by the later settings
-and theme features.
+This activity helped me understand that state management depends on how widely
+the data needs to be used. It became the foundation for the settings, API, and
+cart features that I added later.
 
 ### Lab Activity 2: Product API Integration
 
-The second activity connected the product catalog to DummyJSON using the
-`http` package. The application maps API data into product models and presents
-it through reusable screens and widgets. The activity enhancements were:
+For Lab Activity 2, I started organizing the project using a clean
+architecture structure with `models`, `providers`, `screens`, `services`, and
+`widgets`. Separating these responsibilities made the code easier for me to
+understand because the data, state, API logic, and interface were no longer
+kept in one place.
 
-1. **Enhancement 1:** a dynamic search bar is displayed above the product list
-   and filters products as the user types.
-2. **Enhancement 2:** selecting a product card opens a detail page containing
-   the product information and price.
-3. **Enhancement 3:** a settings page provides light and dark theme toggling.
-   The activity uses `flutter_dotenv` for environment configuration and `http`
-   for network requests.
+I connected the product catalog to DummyJSON using the `http` package. I
+learned how to receive product data from the API, map it into models, and show
+it through reusable screens and widgets. I added a search filter so I could
+find products while typing, and I added detail view navigation so selecting a
+product opened its image, description, and price.
 
-### Lab Activity 3: Cart Management and Aquatic Theme
+I also added a settings page for switching between light and dark themes. Lab
+Activity 2 showed me how the state-management ideas from the first activity
+could support a real API-based application.
 
-The third activity expanded the catalog into a cart workflow and applied a
-custom visual identity inspired by Betta fish and Neocaridina shrimps. The
-light theme uses clean water-clear tones, while the dark theme uses deep
-abyss/slate tones. Royal blue represents Betta fish, and cherry-red and orange
-accents represent Neocaridina shrimp.
+### Lab Activity 3: Cart Management
 
-The cart and navigation enhancements were:
+In Lab Activity 3, I extended the product catalog into a complete cart
+workflow. The main challenge for me was working with the nested JSON returned
+by the cart API. A cart contains cart information and a list of products, so I
+had to parse the product objects inside the cart instead of treating the
+response as a simple flat list. This gave me more practice creating models that
+match the actual structure of API data.
 
-1. **Enhancement 1:** `cart_screen.dart` renders cart data from the DummyJSON
-   cart endpoints, including product thumbnails, quantities, prices, totals,
-   and a Confirm Order action.
-2. **Enhancement 2:** navigation connects the catalog, cart, and theme
-   settings through the bottom navigation bar and its floating-style action
-   behavior.
-3. **Enhancement 3:** carts can be filtered for a specific user through
-   `/carts/user/{id}`, and each cart item is clickable and routes to the
-   corresponding product detail screen.
+I added cart items with product thumbnails, quantities, prices, and totals. I
+also made it possible to update quantities and keep track of products added by
+the user. The bottom navigation connects the shop, cart, theme, and profile
+areas, so the user can move between the main parts of the application without
+losing the current cart state.
 
-The catalog content is aligned with the theme through fish-focused products
-such as Royal Blue Betta, Neon Tetra School, Fancy Guppy Pair, and Cherry
-Shrimp Colony.
+Another important part of this activity was keeping navigation smooth between
+the cart list and the product detail screen. Each cart item can be selected to
+open the matching product details, and the user can return to the cart without
+confusing the selected product or the cart contents. This activity helped me
+understand how API data, Provider state, and navigation need to work together
+in one user workflow.
+
+The catalog currently uses consumer products such as Wireless Headphones,
+Classic Backpack, Smart Watch, and Running Shoes.
