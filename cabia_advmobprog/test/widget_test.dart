@@ -19,7 +19,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Aquaria Store'), findsOneWidget);
+    expect(find.text('Store'), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
     await tester.pump(const Duration(milliseconds: 1500));

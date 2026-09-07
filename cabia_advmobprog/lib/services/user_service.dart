@@ -15,7 +15,7 @@ class UserService {
       const user = User(
         id: 1,
         username: _demoUsername,
-        email: 'nashuu@aquaria.local',
+        email: 'nashuu@store.local',
         firstName: 'Nash',
         lastName: 'Cabia',
         gender: 'unspecified',

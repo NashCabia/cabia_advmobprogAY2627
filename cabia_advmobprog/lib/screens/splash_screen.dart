@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.water_drop,
+            Icons.shopping_cart,
             size: 72,
             color: Theme.of(context).colorScheme.primary,
           ),

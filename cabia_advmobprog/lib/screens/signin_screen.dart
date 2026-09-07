@@ -59,13 +59,13 @@ class _SignInScreenState extends State<SignInScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Icon(
-                  Icons.set_meal,
+                  Icons.shopping_cart,
                   size: 72,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Welcome to Aquaria Store',
+                  'Welcome to Store',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),

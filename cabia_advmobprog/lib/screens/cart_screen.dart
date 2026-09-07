@@ -17,7 +17,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  late final Future<void> _initialCart;
+  late Future<void> _initialCart;
 
   @override
   void initState() {
@@ -36,8 +36,8 @@ class _CartScreenState extends State<CartScreen> {
       return;
     }
 
-    final carts = await CartService.fetchUserCarts(resolvedUserId);
-    cart.loadItems(carts.expand((item) => item.products));
+    final userCart = await CartService.fetchUserCart(resolvedUserId);
+    cart.loadItems(userCart?.products ?? const []);
   }
 
   @override
@@ -52,7 +52,15 @@ class _CartScreenState extends State<CartScreen> {
           }
           if (snapshot.hasError) {
             return Center(
-              child: Text('Failed to load your cart: ${snapshot.error}'),
+              child: FilledButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _initialCart = _loadInitialCart();
+                  });
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry loading cart'),
+              ),
             );
           }
 

@@ -14,15 +14,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<Product>> _productsFuture;
   String _query = '';
   int _selectedDestination = 0;
 
-  Future<List<Product>> _getProducts() {
-    final query = _query.trim();
+  @override
+  void initState() {
+    super.initState();
+    _productsFuture = ProductService.fetchProducts();
+  }
+
+  List<Product> _filterProducts(List<Product> products) {
+    final query = _query.trim().toLowerCase();
     if (query.isEmpty) {
-      return ProductService.fetchProducts();
+      return products;
     }
-    return ProductService.searchProducts(query);
+
+    return products.where((product) {
+      final titleMatch = product.title.toLowerCase().contains(query);
+      final descMatch = product.description.toLowerCase().contains(query);
+      return titleMatch || descMatch;
+    }).toList();
   }
 
   Future<void> _selectDestination(int index) async {
@@ -37,8 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } else if (index == 2) {
       await Navigator.pushNamed(context, '/settings');
-    } else if (index == 3) {
-      await Navigator.pushNamed(context, '/profile');
     }
 
     if (mounted) {
@@ -57,19 +67,36 @@ class _HomeScreenState extends State<HomeScreen> {
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Profile',
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => Navigator.pushNamed(context, '/profile'),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Product>>(
-        future: _getProducts(),
+        future: _productsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
-            return Center(child: CustomText(text: 'Failed to load products'));
+            return Center(
+              child: FilledButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _productsFuture = ProductService.fetchProducts();
+                  });
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry loading products'),
+              ),
+            );
           }
 
-          final products = snapshot.data ?? const [];
+          final products = _filterProducts(snapshot.data ?? const []);
 
           return Column(
             children: [
@@ -158,9 +185,9 @@ class _HomeScreenState extends State<HomeScreen> {
         onDestinationSelected: _selectDestination,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.shopping_bag_outlined),
-            selectedIcon: Icon(Icons.shopping_bag),
-            label: 'Catalog',
+            icon: Icon(Icons.storefront_outlined),
+            selectedIcon: Icon(Icons.storefront),
+            label: 'Store',
           ),
           NavigationDestination(
             icon: Icon(Icons.shopping_cart_outlined),
@@ -172,12 +199,16 @@ class _HomeScreenState extends State<HomeScreen> {
             selectedIcon: Icon(Icons.tune),
             label: 'Theme',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Chat',
+        onPressed: () {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Chat is coming soon')));
+        },
+        child: const Icon(Icons.chat_bubble_outline),
       ),
     );
   }
