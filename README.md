@@ -5,20 +5,19 @@
 
 ## Project Overview
 
-This Flutter project introduces a feature-aligned clean architecture pattern.
-The application is organized into `models/`, `providers/`, `screens/`,
-`services/`, and `widgets/` so data, state, screens, and reusable UI remain
-separated. Provider is used for application-wide state management.
+This Flutter project is the first stage of my Advanced Mobile Programming
+application. I started learning how to separate the data, state, screens,
+services, and reusable interface components so the project would be easier to
+develop as more features were added.
 
 ## Lab Activity 1: Flutter State Management
 
-Lab Activity 1 demonstrates two kinds of state:
+In Lab Activity 1, I learned the difference between ephemeral state and
+application-wide state. I used `setState` for a local counter, where the state
+belongs only to the widget that owns it. I also used `ChangeNotifier` and
+Provider for the theme setting so different parts of the application could
+respond when the light or dark mode changed.
 
-- **Ephemeral state:** a local counter is updated with Flutter's `setState`.
-	The state belongs only to the widget that owns the counter.
-- **App-wide state:** `ChangeNotifier` and Provider expose `ThemeModel` to the
-	application. `ThemeModel` stores the light/dark mode selection and notifies
-	listening widgets whenever the selection changes.
-
-This activity establishes the state-management foundation used by the later
-catalog, settings, and theme features.
+This activity helped me understand that state management depends on how widely
+the data needs to be used. It gave me the foundation for the catalog, settings,
+and theme features that I developed in the next activities.
