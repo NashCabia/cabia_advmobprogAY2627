@@ -1,43 +1,61 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:cabia_mobile/models/product.dart';
 
 class ProductService {
-  static Future<List<Product>> fetchProducts() async {
-    await Future.delayed(const Duration(milliseconds: 500));
+  static const _baseUrl = 'https://dummyjson.com';
 
-    return const [
-      Product(
-        id: 1,
-        title: 'Royal Blue Betta',
-        description:
-            'A vibrant male Betta splendens with flowing royal-blue fins.',
-        imageUrl: 'https://loremflickr.com/600/400/betta,fish?lock=1',
-        price: 24.99,
-      ),
-      Product(
-        id: 2,
-        title: 'Neon Tetra School',
-        description:
-            'A lively school of peaceful neon tetras for a planted aquarium.',
-        imageUrl: 'https://loremflickr.com/600/400/neon,tetra,fish?lock=2',
-        price: 32.50,
-      ),
-      Product(
-        id: 3,
-        title: 'Fancy Guppy Pair',
-        description:
-            'A colorful pair of hardy fancy guppies with bright flowing tails.',
-        imageUrl: 'https://loremflickr.com/600/400/guppy,fish?lock=3',
-        price: 54.99,
-      ),
-      Product(
-        id: 4,
-        title: 'Cherry Shrimp Colony',
-        description:
-            'A bright Neocaridina colony that adds movement and color to planted tanks.',
-        imageUrl:
-            'https://loremflickr.com/600/400/cherry,shrimp,aquarium?lock=4',
-        price: 18.75,
-      ),
-    ];
+  static Future<List<Product>> fetchProducts() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/products?limit=30'),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final List<dynamic> products = jsonData['products'] ?? [];
+
+        return products.map((product) {
+          return Product(
+            id: product['id'] ?? 0,
+            title: product['title'] ?? 'Unknown Product',
+            description: product['description'] ?? 'No description available',
+            imageUrl: product['thumbnail'] ?? product['images']?[0] ?? '',
+            price: (product['price'] ?? 0).toDouble(),
+          );
+        }).toList();
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } catch (e) {
+      throw Exception('Error fetching products: $e');
+    }
+  }
+
+  static Future<List<Product>> searchProducts(String query) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/products/search?q=$query'),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final List<dynamic> products = jsonData['products'] ?? [];
+
+        return products.map((product) {
+          return Product(
+            id: product['id'] ?? 0,
+            title: product['title'] ?? 'Unknown Product',
+            description: product['description'] ?? 'No description available',
+            imageUrl: product['thumbnail'] ?? product['images']?[0] ?? '',
+            price: (product['price'] ?? 0).toDouble(),
+          );
+        }).toList();
+      } else {
+        throw Exception('Failed to search products');
+      }
+    } catch (e) {
+      throw Exception('Error searching products: $e');
+    }
   }
 }

@@ -67,6 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Profile',
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => Navigator.pushNamed(context, '/profile'),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Product>>(
         future: _productsFuture,
@@ -76,7 +83,17 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: CustomText(text: 'Failed to load products'));
+            return Center(
+              child: FilledButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _productsFuture = ProductService.fetchProducts();
+                  });
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry loading products'),
+              ),
+            );
           }
 
           final products = _filterProducts(snapshot.data ?? const []);
@@ -168,9 +185,9 @@ class _HomeScreenState extends State<HomeScreen> {
         onDestinationSelected: _selectDestination,
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.water_drop_outlined),
-            selectedIcon: Icon(Icons.water_drop),
-            label: 'Aquarium',
+            icon: Icon(Icons.storefront_outlined),
+            selectedIcon: Icon(Icons.storefront),
+            label: 'Store',
           ),
           NavigationDestination(
             icon: Icon(Icons.shopping_cart_outlined),
@@ -183,6 +200,15 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Theme',
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Chat',
+        onPressed: () {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Chat is coming soon')));
+        },
+        child: const Icon(Icons.chat_bubble_outline),
       ),
     );
   }
